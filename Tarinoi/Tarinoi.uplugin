@@ -1,0 +1,36 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1.0",
+	"FriendlyName": "Tarinoi",
+	"Description": "Tarinoi dialogue for Unreal Engine. Syncs authored dialogue from the Tarinoi service into a local SQLite database, evaluates authored conditions and functions against your game's bindings, and drives dialogue playback through Blueprint-assignable events.",
+	"Category": "Narrative",
+	"CreatedBy": "Tarinoi",
+	"CreatedByURL": "https://tarinoi.com",
+	"DocsURL": "https://tarinoi.app/docs/plugins/unreal.html",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/tarinoi/tarinoi-unreal-plugin/issues",
+	"EngineVersion": "5.8.0",
+	"CanContainContent": false,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "Tarinoi",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "TarinoiEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "SQLiteCore",
+			"Enabled": true
+		}
+	]
+}
