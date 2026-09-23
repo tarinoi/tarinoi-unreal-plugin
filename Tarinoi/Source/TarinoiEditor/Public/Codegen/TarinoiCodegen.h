@@ -119,11 +119,16 @@ struct TARINOIEDITOR_API FTarinoiGeneratedFiles
 
 namespace TarinoiCodegen
 {
-	/** Name of the header generated binding classes are declared in. */
-	TARINOIEDITOR_API extern const TCHAR* FunctionsHeader;
-	TARINOIEDITOR_API extern const TCHAR* VariablesHeader;
-	TARINOIEDITOR_API extern const TCHAR* ListsHeader;
-	TARINOIEDITOR_API extern const TCHAR* EntitiesHeader;
+	/**
+	 * A generated file's name: TarinoiGeneratedFunctions.h and so on. Derived from the class prefix
+	 * because UHT requires header names to be unique across every module in a build, and the test
+	 * fixture is compiled alongside a game's own generated code.
+	 */
+	TARINOIEDITOR_API FString FileName(const FString& Prefix, const TCHAR* Kind, const TCHAR* Extension);
+	inline FString FunctionsHeader(const FString& Prefix = TEXT("Tarinoi")) { return FileName(Prefix, TEXT("Functions"), TEXT("h")); }
+	inline FString VariablesHeader(const FString& Prefix = TEXT("Tarinoi")) { return FileName(Prefix, TEXT("Variables"), TEXT("h")); }
+	inline FString ListsHeader(const FString& Prefix = TEXT("Tarinoi")) { return FileName(Prefix, TEXT("Lists"), TEXT("h")); }
+	inline FString EntitiesHeader(const FString& Prefix = TEXT("Tarinoi")) { return FileName(Prefix, TEXT("Entities"), TEXT("h")); }
 
 	/**
 	 * Loads every declaration codegen cares about. Each query joins the collection's own

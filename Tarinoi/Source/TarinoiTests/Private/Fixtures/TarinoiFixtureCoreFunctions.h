@@ -11,7 +11,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TarinoiGeneratedFunctions.h"
+#include "TarinoiFixtureGeneratedFunctions.h"
 
 #include "TarinoiFixtureCoreFunctions.generated.h"
 

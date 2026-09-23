@@ -112,7 +112,7 @@ namespace TarinoiCodegenFixture
 		TMap<FString, FString> Files = TarinoiCodegen::Render(Model(), Options()).Files;
 		FString Header, Source;
 		TArray<FString> Unknown;
-		TarinoiCoreFunctions::Render(CoreDecls(), Options(), TarinoiCodegen::FunctionsHeader, Header, Source, Unknown);
+		TarinoiCoreFunctions::Render(CoreDecls(), Options(), TarinoiCodegen::FunctionsHeader(Options().ClassPrefix), Header, Source, Unknown);
 		Files.Add(TarinoiCoreFunctions::ClassName(Options().ClassPrefix) + TEXT(".h"), Header);
 		Files.Add(TarinoiCoreFunctions::ClassName(Options().ClassPrefix) + TEXT(".cpp"), Source);
 		return Files;

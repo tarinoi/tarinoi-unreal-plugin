@@ -7,7 +7,7 @@
 #include "Bindings/TarinoiBindings.h"
 #include "CoreMinimal.h"
 
-#include "TarinoiGeneratedVariables.generated.h"
+#include "TarinoiFixtureGeneratedVariables.generated.h"
 
 /**
  * State the author reads and writes as Var.state.*

@@ -2,7 +2,7 @@
 // Do not edit: regenerating overwrites this file. Implement your bindings in a class
 // derived from these, in C++ or in Blueprint.
 
-#include "TarinoiGeneratedFunctions.h"
+#include "TarinoiFixtureGeneratedFunctions.h"
 
 bool UTarinoiFixtureGlobalFunctions::CheckGate_Implementation(const FTarinoiValue& Door)
 {

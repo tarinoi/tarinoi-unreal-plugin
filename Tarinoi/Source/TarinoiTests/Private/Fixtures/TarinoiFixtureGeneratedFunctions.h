@@ -7,7 +7,7 @@
 #include "Bindings/TarinoiBindings.h"
 #include "CoreMinimal.h"
 
-#include "TarinoiGeneratedFunctions.generated.h"
+#include "TarinoiFixtureGeneratedFunctions.generated.h"
 
 /**
  * Functions the author calls as Fn.global.*

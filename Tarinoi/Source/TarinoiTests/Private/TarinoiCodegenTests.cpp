@@ -17,13 +17,13 @@ namespace TarinoiCodegenTests
 	FString Functions(const FTarinoiCodegenModel& Model)
 	{
 		const FTarinoiGeneratedFiles Files = TarinoiCodegen::Render(Model, TarinoiCodegenFixture::Options());
-		return Files.Files[TarinoiCodegen::FunctionsHeader] + Files.Files[TEXT("TarinoiGeneratedFunctions.cpp")];
+		return Files.Files[TEXT("TarinoiFixtureGeneratedFunctions.h")] + Files.Files[TEXT("TarinoiFixtureGeneratedFunctions.cpp")];
 	}
 
 	FString Variables(const FTarinoiCodegenModel& Model)
 	{
 		const FTarinoiGeneratedFiles Files = TarinoiCodegen::Render(Model, TarinoiCodegenFixture::Options());
-		return Files.Files[TarinoiCodegen::VariablesHeader] + Files.Files[TEXT("TarinoiGeneratedVariables.cpp")];
+		return Files.Files[TEXT("TarinoiFixtureGeneratedVariables.h")] + Files.Files[TEXT("TarinoiFixtureGeneratedVariables.cpp")];
 	}
 }
 
@@ -181,7 +181,7 @@ void FTarinoiCodegenSpec::Define()
 		{
 			const FTarinoiGeneratedFiles Files = TarinoiCodegen::Render(FTarinoiCodegenModel(), TarinoiCodegenFixture::Options());
 			TestEqual("six files", Files.Files.Num(), 6);
-			TestTrue("says why", Files.Files[TarinoiCodegen::FunctionsHeader].Contains(TEXT("No function collections have been synced yet.")));
+			TestTrue("says why", Files.Files[TEXT("TarinoiFixtureGeneratedFunctions.h")].Contains(TEXT("No function collections have been synced yet.")));
 		});
 
 		It("turns variables into typed, Blueprint-editable properties", [this]()
@@ -206,14 +206,14 @@ void FTarinoiCodegenSpec::Define()
 
 		It("turns list option keys into constants, sorted, using the key", [this]()
 		{
-			const FString Lists = TarinoiCodegen::Render(TarinoiCodegenFixture::Model(), TarinoiCodegenFixture::Options()).Files[TarinoiCodegen::ListsHeader];
+			const FString Lists = TarinoiCodegen::Render(TarinoiCodegenFixture::Model(), TarinoiCodegenFixture::Options()).Files[TEXT("TarinoiFixtureGeneratedLists.h")];
 			TestTrue("constant", Lists.Contains(TEXT("constexpr const TCHAR* Heroic = TEXT(\"heroic\");")));
 			TestTrue("sorted", Lists.Find(TEXT("Easy")) < Lists.Find(TEXT("Hard")) && Lists.Find(TEXT("Hard")) < Lists.Find(TEXT("Heroic")));
 		});
 
 		It("turns entity identifiers into constants", [this]()
 		{
-			const FString Entities = TarinoiCodegen::Render(TarinoiCodegenFixture::Model(), TarinoiCodegenFixture::Options()).Files[TarinoiCodegen::EntitiesHeader];
+			const FString Entities = TarinoiCodegen::Render(TarinoiCodegenFixture::Model(), TarinoiCodegenFixture::Options()).Files[TEXT("TarinoiFixtureGeneratedEntities.h")];
 			TestTrue("constant", Entities.Contains(TEXT("constexpr const TCHAR* Ferryman = TEXT(\"ferryman\");")));
 		});
 
@@ -341,7 +341,7 @@ void FTarinoiCodegenSpec::Define()
 			const FString Dir = FPaths::Combine(FPaths::AutomationTransientDir(), TEXT("TarinoiCodegen"), FGuid::NewGuid().ToString());
 			const FTarinoiGeneratedFiles Files = TarinoiCodegen::Render(TarinoiCodegenFixture::Model(), TarinoiCodegenFixture::Options());
 			TestTrue("wrote", TarinoiCodegen::Write(Files, Dir));
-			const FString Header = FPaths::Combine(Dir, TarinoiCodegen::FunctionsHeader);
+			const FString Header = FPaths::Combine(Dir, TarinoiCodegen::FunctionsHeader(TEXT("TarinoiFixture")));
 			const FDateTime Before = IFileManager::Get().GetTimeStamp(*Header);
 			FPlatformProcess::Sleep(1.1f);
 			TarinoiCodegen::Write(Files, Dir);
@@ -393,7 +393,7 @@ void FTarinoiCodegenSpec::Define()
 			const FString Header = FPaths::Combine(Dir, TarinoiCoreFunctions::ClassName(Options.ClassPrefix) + TEXT(".h"));
 			FString Written;
 			FFileHelper::LoadFileToString(Written, *Header);
-			TestTrue("includes the generated header relatively", Written.Contains(TEXT("#include \"Generated/TarinoiGeneratedFunctions.h\"")));
+			TestTrue("includes the generated header relatively", Written.Contains(TEXT("#include \"Generated/TarinoiFixtureGeneratedFunctions.h\"")));
 
 			FFileHelper::SaveStringToFile(TEXT("// the game's edits"), *Header);
 			TestFalse("not rewritten", TarinoiCoreFunctions::Scaffold(TarinoiCodegenFixture::Model(), Dir, Dir / TEXT("Generated"), Options));

@@ -2,7 +2,7 @@
 // Do not edit: regenerating overwrites this file. Implement your bindings in a class
 // derived from these, in C++ or in Blueprint.
 
-#include "TarinoiGeneratedVariables.h"
+#include "TarinoiFixtureGeneratedVariables.h"
 
 #include "Tarinoi.h"
 

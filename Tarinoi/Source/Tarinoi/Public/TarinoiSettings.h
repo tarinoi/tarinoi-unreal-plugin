@@ -22,12 +22,12 @@ enum class ETarinoiLogLevel : uint8
 
 /**
  * Project-wide Tarinoi configuration, under Project Settings > Plugins > Tarinoi and stored in
- * Config/DefaultGame.ini.
+ * Config/DefaultTarinoi.ini, a file of its own so a project can choose whether to commit it.
  *
  * The API token is deliberately not here. It lives outside the project directory (see
  * FTarinoiCredentials), so it can never be committed or packaged into a build.
  */
-UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "Tarinoi"))
+UCLASS(Config = Tarinoi, DefaultConfig, meta = (DisplayName = "Tarinoi"))
 class TARINOI_API UTarinoiSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()

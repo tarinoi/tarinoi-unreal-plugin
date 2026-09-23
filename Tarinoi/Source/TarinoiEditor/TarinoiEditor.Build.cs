@@ -22,9 +22,15 @@ public class TarinoiEditor : ModuleRules
 			"ToolMenus",
 			"Slate",
 			"SlateCore",
+			"InputCore",
 			"Json",
 			"Projects",
 			"DeveloperSettings",
+			"PropertyEditor",
+			"MessageLog",
+			"Settings",
+			"DeveloperToolSettings",
+			"HTTP",
 		});
 	}
 }

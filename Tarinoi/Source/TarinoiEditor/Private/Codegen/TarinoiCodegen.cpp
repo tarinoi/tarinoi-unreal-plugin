@@ -231,10 +231,10 @@ namespace
 
 namespace TarinoiCodegen
 {
-	const TCHAR* FunctionsHeader = TEXT("TarinoiGeneratedFunctions.h");
-	const TCHAR* VariablesHeader = TEXT("TarinoiGeneratedVariables.h");
-	const TCHAR* ListsHeader = TEXT("TarinoiGeneratedLists.h");
-	const TCHAR* EntitiesHeader = TEXT("TarinoiGeneratedEntities.h");
+	FString FileName(const FString& Prefix, const TCHAR* Kind, const TCHAR* Extension)
+	{
+		return FString::Printf(TEXT("%sGenerated%s.%s"), *Prefix, Kind, Extension);
+	}
 
 	FTarinoiCodegenModel Load(FTarinoiDatabase& Database)
 	{
@@ -356,7 +356,7 @@ namespace
 		W.Line(TEXT("#include \"Bindings/TarinoiBindings.h\""));
 		W.Line(TEXT("#include \"CoreMinimal.h\""));
 		W.Line();
-		W.Line(TEXT("#include \"TarinoiGeneratedFunctions.generated.h\""));
+		W.Line(FString::Printf(TEXT("#include \"%sGeneratedFunctions.generated.h\""), *Options.ClassPrefix));
 
 		const TArray<FString> Collections = FTarinoiCodegenModel::SortedKeys(Model.Functions);
 		if (Collections.Num() == 0)
@@ -408,7 +408,7 @@ namespace
 	{
 		FTarinoiCodeWriter W;
 		Header(W, Options.ProjectId);
-		W.Line(FString::Printf(TEXT("#include \"%s\""), TarinoiCodegen::FunctionsHeader));
+		W.Line(FString::Printf(TEXT("#include \"%s\""), *TarinoiCodegen::FunctionsHeader(Options.ClassPrefix)));
 
 		for (const FString& Collection : FTarinoiCodegenModel::SortedKeys(Model.Functions))
 		{
@@ -536,7 +536,7 @@ namespace
 		W.Line(TEXT("#include \"Bindings/TarinoiBindings.h\""));
 		W.Line(TEXT("#include \"CoreMinimal.h\""));
 		W.Line();
-		W.Line(TEXT("#include \"TarinoiGeneratedVariables.generated.h\""));
+		W.Line(FString::Printf(TEXT("#include \"%sGeneratedVariables.generated.h\""), *Options.ClassPrefix));
 
 		const TArray<FString> Collections = FTarinoiCodegenModel::SortedKeys(Model.Variables);
 		if (Collections.Num() == 0)
@@ -588,7 +588,7 @@ namespace
 	{
 		FTarinoiCodeWriter W;
 		Header(W, Options.ProjectId);
-		W.Line(FString::Printf(TEXT("#include \"%s\""), TarinoiCodegen::VariablesHeader));
+		W.Line(FString::Printf(TEXT("#include \"%s\""), *TarinoiCodegen::VariablesHeader(Options.ClassPrefix)));
 		W.Line();
 		W.Line(TEXT("#include \"Tarinoi.h\""));
 
@@ -736,13 +736,14 @@ namespace TarinoiCodegen
 {
 	FTarinoiGeneratedFiles Render(const FTarinoiCodegenModel& Model, const FTarinoiCodegenOptions& Options)
 	{
+		const FString& Prefix = Options.ClassPrefix;
 		FTarinoiGeneratedFiles Out;
-		Out.Files.Add(FunctionsHeader, RenderFunctionsHeader(Model, Options));
-		Out.Files.Add(TEXT("TarinoiGeneratedFunctions.cpp"), RenderFunctionsSource(Model, Options));
-		Out.Files.Add(VariablesHeader, RenderVariablesHeader(Model, Options));
-		Out.Files.Add(TEXT("TarinoiGeneratedVariables.cpp"), RenderVariablesSource(Model, Options));
-		Out.Files.Add(ListsHeader, RenderLists(Model, Options));
-		Out.Files.Add(EntitiesHeader, RenderEntities(Model, Options));
+		Out.Files.Add(FunctionsHeader(Prefix), RenderFunctionsHeader(Model, Options));
+		Out.Files.Add(FileName(Prefix, TEXT("Functions"), TEXT("cpp")), RenderFunctionsSource(Model, Options));
+		Out.Files.Add(VariablesHeader(Prefix), RenderVariablesHeader(Model, Options));
+		Out.Files.Add(FileName(Prefix, TEXT("Variables"), TEXT("cpp")), RenderVariablesSource(Model, Options));
+		Out.Files.Add(ListsHeader(Prefix), RenderLists(Model, Options));
+		Out.Files.Add(EntitiesHeader(Prefix), RenderEntities(Model, Options));
 		return Out;
 	}
 

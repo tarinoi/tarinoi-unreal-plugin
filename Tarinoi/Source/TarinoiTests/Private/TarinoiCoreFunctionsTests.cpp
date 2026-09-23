@@ -11,7 +11,7 @@
 #include "Bindings/TarinoiDispatcher.h"
 #include "Codegen/TarinoiBindingValidator.h"
 #include "Fixtures/TarinoiFixtureCoreFunctions.h"
-#include "Fixtures/TarinoiGeneratedVariables.h"
+#include "Fixtures/TarinoiFixtureGeneratedVariables.h"
 #include "TarinoiCodegenFixture.h"
 #include "TarinoiTestBindings.h"
 #include "TarinoiTestHelpers.h"

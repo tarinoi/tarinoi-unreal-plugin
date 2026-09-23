@@ -298,7 +298,7 @@ namespace TarinoiCoreFunctions
 			return false;
 		}
 
-		FString Include = FPaths::Combine(OutputDir, TarinoiCodegen::FunctionsHeader);
+		FString Include = FPaths::Combine(OutputDir, TarinoiCodegen::FunctionsHeader(Options.ClassPrefix));
 		FPaths::MakePathRelativeTo(Include, *(FPaths::ConvertRelativePathToFull(ImplDir) / TEXT("")));
 
 		FString Header, Source;
