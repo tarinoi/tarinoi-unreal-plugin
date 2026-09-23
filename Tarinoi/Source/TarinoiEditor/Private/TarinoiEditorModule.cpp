@@ -8,7 +8,9 @@
 #include "STarinoiTokenDialog.h"
 #include "TarinoiEditorActions.h"
 #include "TarinoiSettings.h"
+#include "Components/TarinoiDialogueTrigger.h"
 #include "TarinoiSettingsCustomization.h"
+#include "TarinoiTriggerCustomization.h"
 #include "ToolMenus.h"
 
 #define LOCTEXT_NAMESPACE "TarinoiEditor"
@@ -26,6 +28,8 @@ public:
 		FPropertyEditorModule& PropertyEditor = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 		PropertyEditor.RegisterCustomClassLayout(UTarinoiSettings::StaticClass()->GetFName(),
 			FOnGetDetailCustomizationInstance::CreateStatic(&FTarinoiSettingsCustomization::MakeInstance));
+		PropertyEditor.RegisterCustomClassLayout(UTarinoiDialogueTrigger::StaticClass()->GetFName(),
+			FOnGetDetailCustomizationInstance::CreateStatic(&FTarinoiTriggerCustomization::MakeInstance));
 
 		UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FTarinoiEditorModule::RegisterMenus));
 	}
@@ -37,7 +41,9 @@ public:
 
 		if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
 		{
-			FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor").UnregisterCustomClassLayout(UTarinoiSettings::StaticClass()->GetFName());
+			FPropertyEditorModule& PropertyEditor = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
+			PropertyEditor.UnregisterCustomClassLayout(UTarinoiSettings::StaticClass()->GetFName());
+			PropertyEditor.UnregisterCustomClassLayout(UTarinoiDialogueTrigger::StaticClass()->GetFName());
 		}
 
 		if (FModuleManager::Get().IsModuleLoaded("MessageLog"))

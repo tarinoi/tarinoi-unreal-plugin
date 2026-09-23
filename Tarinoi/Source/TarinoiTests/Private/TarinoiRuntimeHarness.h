@@ -102,6 +102,10 @@ public:
 	UFUNCTION() void HandleSyncStarted() { ++SyncStartedCount; }
 	UFUNCTION() void HandleSyncCompleted(const FTarinoiSyncStats& Stats) { SyncsCompleted.Add(Stats); }
 	UFUNCTION() void HandleSyncFailed(const FString& Error) { SyncsFailed.Add(Error); }
+
+	/** For dialogue triggers. */
+	TArray<FString> Triggered;
+	UFUNCTION() void HandleTriggered(const FString& CollectionId, const FString& CardId) { Triggered.Add(CollectionId + TEXT("/") + CardId); }
 };
 
 /** Records which functions ran, in order, and returns a configurable pin. */

@@ -22,6 +22,9 @@ public class TarinoiTests : ModuleRules
 			"Tarinoi",
 			"TarinoiEditor",
 			"Projects",
+			"UMG",
+			"Slate",
+			"SlateCore",
 		});
 	}
 }

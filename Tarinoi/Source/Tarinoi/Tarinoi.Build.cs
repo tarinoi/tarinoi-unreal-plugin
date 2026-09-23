@@ -15,6 +15,7 @@ public class Tarinoi : ModuleRules
 			"Engine",
 			"DeveloperSettings",
 			"Json",
+			"UMG",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[]
@@ -22,6 +23,9 @@ public class Tarinoi : ModuleRules
 			"SQLiteCore",
 			"HTTP",
 			"Projects",
+			"Slate",
+			"SlateCore",
+			"InputCore",
 		});
 	}
 }
