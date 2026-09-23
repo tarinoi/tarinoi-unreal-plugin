@@ -36,15 +36,15 @@ void UTarinoiStartPickerWidget::BuildTree()
 	Column->AddChildToVerticalBox(TarinoiUiStyle::Text(WidgetTree, TEXT("Where would you like to start?"), 22, TarinoiUiStyle::Heading, true));
 
 	Status = TarinoiUiStyle::Text(WidgetTree, FString(), 13, TarinoiUiStyle::Dimmed);
-	if (UVerticalBoxSlot* Slot = Column->AddChildToVerticalBox(Status))
+	if (UVerticalBoxSlot* LayoutSlot = Column->AddChildToVerticalBox(Status))
 	{
-		Slot->SetPadding(FMargin(0.0f, 4.0f, 0.0f, 12.0f));
+		LayoutSlot->SetPadding(FMargin(0.0f, 4.0f, 0.0f, 12.0f));
 	}
 
 	List = WidgetTree->ConstructWidget<UScrollBox>();
-	if (UVerticalBoxSlot* Slot = Column->AddChildToVerticalBox(List))
+	if (UVerticalBoxSlot* LayoutSlot = Column->AddChildToVerticalBox(List))
 	{
-		Slot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+		LayoutSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
 	}
 }
 
@@ -111,9 +111,9 @@ void UTarinoiStartPickerWidget::Refresh()
 		if (bFirstGroup || !Card.CollectionLabel.Equals(CurrentGroup, ESearchCase::CaseSensitive))
 		{
 			UTextBlock* Heading = TarinoiUiStyle::Text(WidgetTree, Card.CollectionLabel, 15, TarinoiUiStyle::Speaker, true);
-			if (UScrollBoxSlot* Slot = Cast<UScrollBoxSlot>(List->AddChild(Heading)))
+			if (UScrollBoxSlot* LayoutSlot = Cast<UScrollBoxSlot>(List->AddChild(Heading)))
 			{
-				Slot->SetPadding(FMargin(0.0f, bFirstGroup ? 0.0f : 12.0f, 0.0f, 4.0f));
+				LayoutSlot->SetPadding(FMargin(0.0f, bFirstGroup ? 0.0f : 12.0f, 0.0f, 4.0f));
 			}
 			CurrentGroup = Card.CollectionLabel;
 			bFirstGroup = false;
@@ -130,10 +130,10 @@ void UTarinoiStartPickerWidget::Refresh()
 		Button->OnClicked.AddDynamic(Action, &UTarinoiButtonAction::Invoke);
 		EntryActions.Add(Action);
 
-		if (UScrollBoxSlot* Slot = Cast<UScrollBoxSlot>(List->AddChild(Button)))
+		if (UScrollBoxSlot* LayoutSlot = Cast<UScrollBoxSlot>(List->AddChild(Button)))
 		{
-			Slot->SetPadding(FMargin(0.0f, 2.0f));
-			Slot->SetHorizontalAlignment(HAlign_Left);
+			LayoutSlot->SetPadding(FMargin(0.0f, 2.0f));
+			LayoutSlot->SetHorizontalAlignment(HAlign_Left);
 		}
 	}
 }

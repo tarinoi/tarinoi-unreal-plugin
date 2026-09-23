@@ -36,16 +36,16 @@ void UTarinoiDialogueStripWidget::BuildTree()
 	Root->SetContent(Column);
 
 	Feed = WidgetTree->ConstructWidget<UScrollBox>();
-	if (UVerticalBoxSlot* Slot = Column->AddChildToVerticalBox(Feed))
+	if (UVerticalBoxSlot* LayoutSlot = Column->AddChildToVerticalBox(Feed))
 	{
-		Slot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+		LayoutSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
 	}
 
 	Hint = TarinoiUiStyle::Text(WidgetTree, FString(), 13, TarinoiUiStyle::Dimmed);
 	Hint->SetJustification(ETextJustify::Right);
-	if (UVerticalBoxSlot* Slot = Column->AddChildToVerticalBox(Hint))
+	if (UVerticalBoxSlot* LayoutSlot = Column->AddChildToVerticalBox(Hint))
 	{
-		Slot->SetPadding(FMargin(0.0f, 8.0f, 0.0f, 0.0f));
+		LayoutSlot->SetPadding(FMargin(0.0f, 8.0f, 0.0f, 0.0f));
 	}
 }
 
@@ -218,9 +218,9 @@ UVerticalBox* UTarinoiDialogueStripWidget::NewEntry()
 {
 	TakeWidget();
 	UVerticalBox* Entry = WidgetTree->ConstructWidget<UVerticalBox>();
-	if (UScrollBoxSlot* Slot = Cast<UScrollBoxSlot>(Feed->AddChild(Entry)))
+	if (UScrollBoxSlot* LayoutSlot = Cast<UScrollBoxSlot>(Feed->AddChild(Entry)))
 	{
-		Slot->SetPadding(FMargin(0.0f, 0.0f, 0.0f, 14.0f));
+		LayoutSlot->SetPadding(FMargin(0.0f, 0.0f, 0.0f, 14.0f));
 	}
 	LiveEntries.Add(Entry);
 	Feed->ScrollToEnd();
@@ -229,9 +229,9 @@ UVerticalBox* UTarinoiDialogueStripWidget::NewEntry()
 
 void UTarinoiDialogueStripWidget::AddText(UVerticalBox* Entry, const FString& Text, int32 Size, const FLinearColor& Color, bool bBold, bool bItalic)
 {
-	if (UVerticalBoxSlot* Slot = Entry->AddChildToVerticalBox(TarinoiUiStyle::Text(WidgetTree, Text, Size, Color, bBold, bItalic)))
+	if (UVerticalBoxSlot* LayoutSlot = Entry->AddChildToVerticalBox(TarinoiUiStyle::Text(WidgetTree, Text, Size, Color, bBold, bItalic)))
 	{
-		Slot->SetPadding(FMargin(0.0f, 2.0f));
+		LayoutSlot->SetPadding(FMargin(0.0f, 2.0f));
 	}
 }
 
@@ -250,10 +250,10 @@ void UTarinoiDialogueStripWidget::AddAction(UVerticalBox* Entry, const FString& 
 	LiveActions.Add(Action);
 	AllActions.Add(Action);
 
-	if (UVerticalBoxSlot* Slot = Entry->AddChildToVerticalBox(Button))
+	if (UVerticalBoxSlot* LayoutSlot = Entry->AddChildToVerticalBox(Button))
 	{
-		Slot->SetPadding(FMargin(0.0f, 2.0f));
-		Slot->SetHorizontalAlignment(HAlign_Left);
+		LayoutSlot->SetPadding(FMargin(0.0f, 2.0f));
+		LayoutSlot->SetHorizontalAlignment(HAlign_Left);
 	}
 }
 

@@ -26,11 +26,11 @@ TSharedRef<SWidget> UTarinoiQuickstartWidget::RebuildWidget()
 			USizeBox* Column = WidgetTree->ConstructWidget<USizeBox>();
 			Column->SetWidthOverride(TarinoiUiStyle::ColumnWidth);
 			Column->AddChild(Child);
-			if (UOverlaySlot* Slot = Root->AddChildToOverlay(Column))
+			if (UOverlaySlot* LayoutSlot = Root->AddChildToOverlay(Column))
 			{
-				Slot->SetHorizontalAlignment(HAlign_Center);
-				Slot->SetVerticalAlignment(VAlign_Fill);
-				Slot->SetPadding(FMargin(0.0f, 48.0f));
+				LayoutSlot->SetHorizontalAlignment(HAlign_Center);
+				LayoutSlot->SetVerticalAlignment(VAlign_Fill);
+				LayoutSlot->SetPadding(FMargin(0.0f, 48.0f));
 			}
 		}
 		Strip->SetVisibility(ESlateVisibility::Collapsed);
