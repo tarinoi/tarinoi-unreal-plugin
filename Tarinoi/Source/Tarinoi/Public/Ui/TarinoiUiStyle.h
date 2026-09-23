@@ -23,6 +23,10 @@ namespace TarinoiUiStyle
 	TARINOI_API extern const FLinearColor SystemLine;
 	TARINOI_API extern const FLinearColor Heading;
 
+	/** The quickstart column's width, and the width text wraps at inside its padding. */
+	TARINOI_API extern const float ColumnWidth;
+	TARINOI_API extern const float ContentWidth;
+
 	TARINOI_API FSlateFontInfo Font(int32 Size, bool bBold = false, bool bItalic = false);
 
 	/** A wrapping text block. */

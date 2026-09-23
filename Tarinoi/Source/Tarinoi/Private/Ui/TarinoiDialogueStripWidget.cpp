@@ -308,7 +308,8 @@ FReply UTarinoiDialogueStripWidget::NativeOnKeyDown(const FGeometry& Geometry, c
 		return FReply::Handled();
 	}
 
-	static const FKey Digits[] = {EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four, EKeys::Five, EKeys::Six, EKeys::Seven, EKeys::Eight, EKeys::Nine};
+	// 1 to 9, then 0 for the tenth.
+	static const FKey Digits[] = {EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four, EKeys::Five, EKeys::Six, EKeys::Seven, EKeys::Eight, EKeys::Nine, EKeys::Zero};
 	for (int32 Index = 0; Index < UE_ARRAY_COUNT(Digits); ++Index)
 	{
 		if (Key == Digits[Index] && Runtime && Runtime->GetDialogueState() == ETarinoiDialogueState::PcChoice)

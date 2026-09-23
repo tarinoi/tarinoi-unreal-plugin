@@ -5,9 +5,11 @@
 #include "Blueprint/WidgetTree.h"
 #include "Components/Overlay.h"
 #include "Components/OverlaySlot.h"
+#include "Components/SizeBox.h"
 #include "TarinoiRuntime.h"
 #include "Ui/TarinoiDialogueStripWidget.h"
 #include "Ui/TarinoiStartPickerWidget.h"
+#include "Ui/TarinoiUiStyle.h"
 
 TSharedRef<SWidget> UTarinoiQuickstartWidget::RebuildWidget()
 {
@@ -20,7 +22,11 @@ TSharedRef<SWidget> UTarinoiQuickstartWidget::RebuildWidget()
 		Strip = WidgetTree->ConstructWidget<UTarinoiDialogueStripWidget>();
 		for (UWidget* Child : {static_cast<UWidget*>(Picker), static_cast<UWidget*>(Strip)})
 		{
-			if (UOverlaySlot* Slot = Root->AddChildToOverlay(Child))
+			// A readable column, whatever the window width.
+			USizeBox* Column = WidgetTree->ConstructWidget<USizeBox>();
+			Column->SetWidthOverride(TarinoiUiStyle::ColumnWidth);
+			Column->AddChild(Child);
+			if (UOverlaySlot* Slot = Root->AddChildToOverlay(Column))
 			{
 				Slot->SetHorizontalAlignment(HAlign_Center);
 				Slot->SetVerticalAlignment(VAlign_Fill);

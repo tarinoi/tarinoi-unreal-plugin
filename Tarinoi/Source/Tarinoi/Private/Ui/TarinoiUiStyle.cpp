@@ -16,6 +16,8 @@ namespace TarinoiUiStyle
 	const FLinearColor Dimmed(0.45f, 0.45f, 0.45f, 1.0f);
 	const FLinearColor SystemLine(0.95f, 0.78f, 0.30f, 1.0f);
 	const FLinearColor Heading(1.0f, 1.0f, 1.0f, 1.0f);
+	const float ColumnWidth = 760.0f;
+	const float ContentWidth = ColumnWidth - 2.0f * 24.0f - 8.0f;
 
 	FSlateFontInfo Font(int32 Size, bool bBold, bool bItalic)
 	{
@@ -29,7 +31,10 @@ namespace TarinoiUiStyle
 		Block->SetText(FText::FromString(Content));
 		Block->SetFont(Font(Size, bBold, bItalic));
 		Block->SetColorAndOpacity(FSlateColor(Color));
-		Block->SetAutoWrapText(true);
+		// A fixed wrap width rather than auto-wrap: auto-wrapped text reports its height a frame
+		// late, so the widget below it briefly overlaps. The quickstart column is a fixed width.
+		Block->SetAutoWrapText(false);
+		Block->SetWrapTextAt(ContentWidth);
 		return Block;
 	}
 
@@ -37,7 +42,7 @@ namespace TarinoiUiStyle
 	{
 		UButton* Button = Tree->ConstructWidget<UButton>();
 		UTextBlock* Text = TarinoiUiStyle::Text(Tree, Label, 16, FLinearColor(0.05f, 0.05f, 0.05f, 1.0f));
-		Text->SetAutoWrapText(true);
+		Text->SetWrapTextAt(ContentWidth - 40.0f);
 		if (UButtonSlot* Slot = Cast<UButtonSlot>(Button->AddChild(Text)))
 		{
 			Slot->SetHorizontalAlignment(HAlign_Left);
