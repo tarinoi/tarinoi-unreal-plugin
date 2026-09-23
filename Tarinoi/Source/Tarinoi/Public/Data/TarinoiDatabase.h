@@ -98,6 +98,9 @@ public:
 	/** The shared database for a file outside the usual location, such as a snapshot copy. */
 	static TSharedPtr<FTarinoiDatabase> AcquireAtPath(const FString& Path);
 
+	/** The shared database for a file if something already has it open, without opening it. */
+	static TSharedPtr<FTarinoiDatabase> AcquireIfOpen(const FString& Path);
+
 	~FTarinoiDatabase();
 
 	bool IsOpen() const;

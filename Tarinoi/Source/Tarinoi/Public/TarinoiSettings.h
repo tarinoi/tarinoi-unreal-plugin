@@ -39,10 +39,6 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "API", meta = (DisplayName = "API Path"))
 	FString ApiPath;
 
-	/** Skip TLS certificate checks. Only for a local development server with a self-signed certificate. */
-	UPROPERTY(Config, EditAnywhere, Category = "API", meta = (DisplayName = "Skip TLS Verify"))
-	bool bSkipTlsVerify = false;
-
 	/** Re-sync periodically during Play In Editor, so authored changes show up without restarting. */
 	UPROPERTY(Config, EditAnywhere, Category = "API")
 	bool bPollEnabled = false;

@@ -44,7 +44,6 @@ void FTarinoiSettingsSpec::Define()
 	{
 		const UTarinoiSettings* Defaults = GetDefault<UTarinoiSettings>();
 		TestFalse("not offline", NewObject<UTarinoiSettings>()->bOfflineMode);
-		TestFalse("TLS verified", NewObject<UTarinoiSettings>()->bSkipTlsVerify);
 		TestFalse("not polling", NewObject<UTarinoiSettings>()->bPollEnabled);
 		TestNotNull("CDO", Defaults);
 	});

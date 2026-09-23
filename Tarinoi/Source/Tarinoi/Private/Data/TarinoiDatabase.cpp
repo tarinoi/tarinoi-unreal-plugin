@@ -131,6 +131,12 @@ TSharedPtr<FTarinoiDatabase> FTarinoiDatabase::AcquireAtPath(const FString& InPa
 	return Database;
 }
 
+TSharedPtr<FTarinoiDatabase> FTarinoiDatabase::AcquireIfOpen(const FString& InPath)
+{
+	const TSharedPtr<FTarinoiDatabase> Existing = OpenDatabases().FindRef(Normalize(InPath)).Pin();
+	return Existing.IsValid() && Existing->IsOpen() ? Existing : nullptr;
+}
+
 FTarinoiDatabase::~FTarinoiDatabase()
 {
 	Close();
