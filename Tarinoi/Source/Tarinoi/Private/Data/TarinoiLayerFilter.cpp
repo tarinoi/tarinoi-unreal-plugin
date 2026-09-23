@@ -3,6 +3,7 @@
 #include "Data/TarinoiLayerFilter.h"
 
 #include "Data/TarinoiDatabase.h"
+#include "TarinoiTypes.h"
 
 namespace TarinoiLayerFilter
 {
@@ -28,16 +29,17 @@ namespace TarinoiLayerFilter
 
 	TArray<FTarinoiDocumentRow> Merge(const TArray<FTarinoiDocumentRow>& Rows, bool bCommittedOnly)
 	{
-		using FKey = TPair<FString, FString>;
+		// Ids are case-sensitive nanoids; see TarinoiTypes.h. A newline cannot appear in either id.
+		using FKey = FString;
 
 		TArray<FKey> Order;
-		TMap<FKey, const FTarinoiDocumentRow*> Main;
-		TMap<FKey, const FTarinoiDocumentRow*> Buffer;
+		TTarinoiMap<const FTarinoiDocumentRow*> Main;
+		TTarinoiMap<const FTarinoiDocumentRow*> Buffer;
 		TArray<FTarinoiDocumentRow> Other;
 
 		for (const FTarinoiDocumentRow& Row : Rows)
 		{
-			const FKey Key(Row.DocumentId, Row.CollectionId);
+			const FKey Key = Row.DocumentId + TEXT("\n") + Row.CollectionId;
 			const bool bMain = Row.LayerId == MainLayer;
 			const bool bBuffer = Row.LayerId == BufferLayer;
 

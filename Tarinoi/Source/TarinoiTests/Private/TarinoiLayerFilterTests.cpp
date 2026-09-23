@@ -130,6 +130,15 @@ void FTarinoiLayerFilterSpec::Define()
 			TarinoiTest::Strings(*this, TEXT("order"), Ids(Merged), {TEXT("b"), TEXT("a"), TEXT("c")});
 		});
 
+		It("treats ids that differ only in case as different documents", [this]()
+		{
+			const TArray<FTarinoiDocumentRow> Merged = Merge({
+				Row({.LayerId = MainLayer, .DocumentId = TEXT("AbC")}),
+				Row({.LayerId = BufferLayer, .DocumentId = TEXT("abc"), .bArchived = true}),
+			}, false);
+			TarinoiTest::Strings(*this, TEXT("AbC survives abc's deletion"), Ids(Merged), {TEXT("AbC")});
+		});
+
 		It("passes an unknown active layer through", [this]()
 		{
 			TestEqual("future layer", Merge({Row({TEXT("tarinoi:some-future-layer")})}, false).Num(), 1);
