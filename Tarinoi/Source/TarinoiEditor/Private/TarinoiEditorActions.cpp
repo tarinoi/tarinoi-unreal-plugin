@@ -9,6 +9,7 @@
 #include "HAL/FileManager.h"
 #include "Interfaces/IProjectManager.h"
 #include "Logging/MessageLog.h"
+#include "Misc/App.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "ProjectDescriptor.h"
@@ -27,6 +28,34 @@ namespace
 	const FName MessageLogName(TEXT("Tarinoi"));
 
 	TSharedPtr<FTarinoiApiImporter> ActiveImport;
+
+	/**
+	 * Adds one line to a section of Config/DefaultGame.ini, as text, unless it is there already.
+	 * Saving a settings object instead would write out its whole section: a large diff for one entry.
+	 */
+	void AddGameIniLine(const FString& Section, const FString& Entry)
+	{
+		const FString Ini = FPaths::Combine(FPaths::ProjectConfigDir(), TEXT("DefaultGame.ini"));
+		FString Text;
+		FFileHelper::LoadFileToString(Text, *Ini);
+		if (Text.Contains(Entry))
+		{
+			return;
+		}
+
+		const FString Header = TEXT("[") + Section + TEXT("]");
+		const int32 At = Text.Find(Header, ESearchCase::IgnoreCase);
+		if (At == INDEX_NONE)
+		{
+			Text += (Text.IsEmpty() || Text.EndsWith(TEXT("\n")) ? TEXT("") : TEXT("\n")) + FString(TEXT("\n")) + Header + TEXT("\n") + Entry + TEXT("\n");
+		}
+		else
+		{
+			const int32 LineEnd = Text.Find(TEXT("\n"), ESearchCase::CaseSensitive, ESearchDir::FromStart, At);
+			Text.InsertAt(LineEnd == INDEX_NONE ? Text.Len() : LineEnd + 1, Entry + TEXT("\n"));
+		}
+		FFileHelper::SaveStringToFile(Text, *Ini, FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);
+	}
 
 	FString ProjectIdOrReport()
 	{
@@ -340,11 +369,16 @@ namespace TarinoiEditorActions
 			FDirectoryPath Folder;
 			Folder.Path = TarinoiSnapshot::ContentFolder;
 			Packaging->DirectoriesToAlwaysStageAsUFS.Add(Folder);
-			Packaging->TryUpdateDefaultConfigFile();
 		}
+		AddGameIniLine(TEXT("/Script/UnrealEd.ProjectPackagingSettings"),
+			FString::Printf(TEXT("+DirectoriesToAlwaysStageAsUFS=(Path=\"%s\")"), TarinoiSnapshot::ContentFolder));
+
+		// The settings live in a config file of their own, which packaging stages but warns about
+		// unless the project says it is meant to ship.
+		AddGameIniLine(TEXT("Staging"), FString::Printf(TEXT("+AllowedConfigFiles=%s/Config/DefaultTarinoi.ini"), FApp::GetProjectName()));
 
 		Notify(FString::Printf(TEXT("Tarinoi: exported a %lld KB snapshot to %s. Turn on Offline Mode in the Tarinoi settings to play from it."),
-			IFileManager::Get().FileSize(*Target) / 1024, *Target), true);
+			IFileManager::Get().FileSize(*Target) / 1024, *FPaths::ConvertRelativePathToFull(Target)), true);
 		return true;
 	}
 
