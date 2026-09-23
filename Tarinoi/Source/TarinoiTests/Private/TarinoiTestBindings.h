@@ -75,6 +75,19 @@ public:
 	FTarinoiValue Anything;
 };
 
+/** Keeps variables in a map, as a game keeping them in a save game might. Unset reads as None. */
+UCLASS(NotBlueprintable)
+class UTarinoiMapVariables : public UTarinoiVariableCollection
+{
+	GENERATED_BODY()
+
+public:
+	TTarinoiMap<FTarinoiValue> Values;
+
+	virtual FTarinoiValue GetVariable_Implementation(FName Name) override { return Values.FindRef(Name.ToString()); }
+	virtual void SetVariable_Implementation(FName Name, const FTarinoiValue& Value) override { Values.Add(Name.ToString(), Value); }
+};
+
 /** Returns itself for "hero" and nothing for anything else. */
 UCLASS(NotBlueprintable)
 class UTarinoiTestEntities : public UTarinoiEntityCollection

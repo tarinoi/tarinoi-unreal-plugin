@@ -4,6 +4,7 @@
 
 #include "Tarinoi.h"
 #include "TarinoiNames.h"
+#include "UObject/UObjectIterator.h"
 #include "UObject/UnrealType.h"
 
 namespace
@@ -393,4 +394,52 @@ void UTarinoiBindings::Clear()
 	Variables.Reset();
 	Entities.Reset();
 	Retained.Reset();
+}
+
+TArray<FString> UTarinoiBindings::BindGeneratedDefaults(const FString& ClassPrefix)
+{
+	TArray<FString> Bound;
+
+	for (TObjectIterator<UClass> It; It; ++It)
+	{
+		UClass* Class = *It;
+		if (!Class->IsNative() || !Class->IsChildOf(UTarinoiVariableCollection::StaticClass())
+			|| Class->HasAnyClassFlags(CLASS_Abstract | CLASS_Deprecated | CLASS_NewerVersionExists))
+		{
+			continue;
+		}
+
+		// Exactly the generated class for its collection, so nothing that merely resembles one
+		// (a test fixture, a hand-written subclass) is picked up.
+		const FString Collection = Class->GetDefaultObject<UTarinoiVariableCollection>()->GetCollectionIdentifier();
+		if (Collection.IsEmpty() || GetVariables(Collection)
+			|| !Class->GetName().Equals(ClassPrefix + TarinoiNames::ToPascal(Collection) + TEXT("Variables"), ESearchCase::CaseSensitive))
+		{
+			continue;
+		}
+
+		BindVariables(Collection, NewObject<UTarinoiVariableCollection>(this, Class));
+		Bound.Add(FString::Printf(TEXT("Var.%s -> %s"), *Collection, *Class->GetName()));
+	}
+
+	// The core set's generated base is named after its collection, "tarinoi"; the scaffold is
+	// whatever concrete class derives from it, wherever the game moved it.
+	static const TCHAR* CoreCollection = TEXT("tarinoi");
+	const UClass* CoreBase = FindFirstObject<UClass>(*(ClassPrefix + TEXT("TarinoiFunctions")), EFindFirstObjectOptions::NativeFirst | EFindFirstObjectOptions::ExactClass);
+	if (CoreBase && !GetFunctions(CoreCollection))
+	{
+		for (TObjectIterator<UClass> It; It; ++It)
+		{
+			UClass* Class = *It;
+			if (Class != CoreBase && Class->IsChildOf(CoreBase) && Class->IsNative()
+				&& !Class->HasAnyClassFlags(CLASS_Abstract | CLASS_Deprecated | CLASS_NewerVersionExists))
+			{
+				BindFunctions(CoreCollection, NewObject<UTarinoiFunctionCollection>(this, Class));
+				Bound.Add(FString::Printf(TEXT("Fn.%s -> %s"), CoreCollection, *Class->GetName()));
+				break;
+			}
+		}
+	}
+
+	return Bound;
 }

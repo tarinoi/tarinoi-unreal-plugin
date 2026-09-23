@@ -131,6 +131,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Tarinoi|Bindings")
 	void Clear();
 
+	/**
+	 * Binds whatever the generated code supplies on its own, for any collection still unbound: the
+	 * generated variable classes (a typed property per variable), and the scaffolded core functions
+	 * for Fn.tarinoi.*. Content that only uses core functions then plays with no bindings written.
+	 * Returns what it bound. The quickstart calls this after the game's own bindings; a real game
+	 * usually binds explicitly.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Tarinoi|Bindings")
+	TArray<FString> BindGeneratedDefaults(const FString& ClassPrefix = TEXT("Tarinoi"));
+
 private:
 	bool Validate(const FString& CollectionIdentifier, const UObject* Object, const TCHAR* Kind) const;
 	void Retain(UObject* Previous, UObject* Next);

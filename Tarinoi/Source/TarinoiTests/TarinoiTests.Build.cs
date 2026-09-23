@@ -21,6 +21,7 @@ public class TarinoiTests : ModuleRules
 			"SQLiteCore",
 			"Tarinoi",
 			"TarinoiEditor",
+			"Projects",
 		});
 	}
 }
