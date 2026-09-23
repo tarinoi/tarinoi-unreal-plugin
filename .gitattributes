@@ -1,0 +1,2 @@
+# The golden fixture is compared byte for byte with what codegen renders, which uses LF.
+Tarinoi/Source/TarinoiTests/Private/Fixtures/* text eol=lf
