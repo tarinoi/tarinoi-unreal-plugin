@@ -17,9 +17,19 @@
 
 namespace TarinoiLiveTests
 {
-	// Cards in the Starter Pack template.
-	const TCHAR* EngineQuestion = TEXT("r_THWAR1tt-bkEFHkj1uT");
-	const TCHAR* ExampleIntro = TEXT("9ThTonKdmgOnmcoLeHx4G");
+	// Starter Pack cards are found by what they say, not by id: the tutorial gets rewritten, and
+	// rewritten cards get new ids.
+	const TCHAR* EngineQuestionSql =
+		TEXT("json_extract(d.payload, '$.data.line') LIKE '%Which game engine%'");
+	// The NPC line the example should pick for Unreal.
+	const TCHAR* UnrealLineSql =
+		TEXT("json_extract(d.payload, '$.input_pin.condition') LIKE '%StringEquals(Var.global.game_engine, Ls.global.engines.unreal)%'");
+
+	/** A card connecting to the given one: the entry point of the set that card belongs to. */
+	FString LeadingInto(const FString& CardId)
+	{
+		return FString::Printf(TEXT("d.payload LIKE '%%>>%s\"%%'"), *CardId);
+	}
 }
 
 BEGIN_DEFINE_SPEC(FTarinoiLiveSpec, "Tarinoi.Live.StarterPack",
@@ -27,6 +37,7 @@ BEGIN_DEFINE_SPEC(FTarinoiLiveSpec, "Tarinoi.Live.StarterPack",
 	TStrongObjectPtr<UTarinoiRuntime> Runtime;
 	TStrongObjectPtr<UTarinoiRuntimeRecorder> Events;
 	bool bReady = false;
+	FString UnrealLineId;
 
 	/** Moves on one step, whichever kind of stop the dialogue is at: a line, or a choice of one. */
 	void Step()
@@ -41,10 +52,23 @@ BEGIN_DEFINE_SPEC(FTarinoiLiveSpec, "Tarinoi.Live.StarterPack",
 		}
 	}
 
-	bool Locate(const TCHAR* CardId, FString& OutCollection)
+	/** The id and collection of the first active card matching a SQL condition on `d`. */
+	bool Find(const TCHAR* Where, FString& OutCardId, FString& OutCollection)
 	{
-		TSharedPtr<FJsonObject> Card;
-		return Runtime->GetDocumentStore()->LocateCard(CardId, OutCollection, Card);
+		const TSharedPtr<FTarinoiDatabase> Database = FTarinoiDatabase::Acquire(GetDefault<UTarinoiSettings>()->GetProjectId());
+		if (!Database)
+		{
+			return false;
+		}
+		const FString Sql = FString::Printf(TEXT("SELECT d.document_id, d.collection_id FROM documents d WHERE %s AND %s LIMIT 1"), Where, *Database->ActiveFilter());
+		bool bFound = false;
+		Database->Query(*Sql, {}, [&](const FTarinoiSqlRow& Row)
+		{
+			OutCardId = Row.GetString(0);
+			OutCollection = Row.GetString(1);
+			bFound = true;
+		});
+		return bFound;
 	}
 END_DEFINE_SPEC(FTarinoiLiveSpec)
 
@@ -73,8 +97,10 @@ void FTarinoiLiveSpec::Define()
 		}
 
 		Runtime->GetBindings()->BindGeneratedDefaults();
-		FString Collection;
-		if (!Runtime->GetBindings()->GetFunctions(TEXT("tarinoi")) || !Runtime->GetBindings()->GetVariables(TEXT("global")) || !Locate(EngineQuestion, Collection))
+		FString CardId, Collection;
+		if (!Runtime->GetBindings()->GetFunctions(TEXT("tarinoi")) || !Runtime->GetBindings()->GetVariables(TEXT("global"))
+			|| !Find(EngineQuestionSql, CardId, Collection) || !Find(UnrealLineSql, UnrealLineId, Collection)
+			|| !Find(*LeadingInto(UnrealLineId), CardId, Collection))
 		{
 			AddInfo(TEXT("Skipped: needs the Starter Pack synced and its bindings generated and compiled."));
 			return;
@@ -99,9 +125,9 @@ void FTarinoiLiveSpec::Define()
 			return;
 		}
 
-		FString Collection;
-		Locate(EngineQuestion, Collection);
-		Runtime->StartDialogue(Collection, EngineQuestion);
+		FString CardId, Collection;
+		Find(EngineQuestionSql, CardId, Collection);
+		Runtime->StartDialogue(Collection, CardId);
 		TestTrue("asks the question", Events->Lines.Num() > 0 && Events->Lines.Last().Line.Contains(TEXT("Which game engine")));
 		Runtime->Advance();
 
@@ -121,10 +147,9 @@ void FTarinoiLiveSpec::Define()
 		Runtime->AbortDialogue();
 
 		// A non-player set gated on StringEquals: only the first passing line is shown.
-		FString ExampleCollection;
-		Locate(ExampleIntro, ExampleCollection);
+		Find(*LeadingInto(UnrealLineId), CardId, Collection);
 		Events->Lines.Reset();
-		Runtime->StartDialogue(ExampleCollection, ExampleIntro);
+		Runtime->StartDialogue(Collection, CardId);
 		Step();
 		TestTrue(FString::Printf(TEXT("the Unreal line: %s"), Events->Lines.Num() ? *Events->Lines.Last().Line : TEXT("none")),
 			Events->Lines.Num() > 0 && Events->Lines.Last().Line.Contains(TEXT("using Unreal")));
