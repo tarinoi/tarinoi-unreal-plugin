@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": 1,
-	"VersionName": "0.1.0",
+	"Version": 2,
+	"VersionName": "0.2.0",
 	"FriendlyName": "Tarinoi",
 	"Description": "Tarinoi dialogue for Unreal Engine. Syncs authored dialogue from the Tarinoi service into a local SQLite database, evaluates authored conditions and functions against your game's bindings, and drives dialogue playback through Blueprint-assignable events.",
 	"Category": "Narrative",

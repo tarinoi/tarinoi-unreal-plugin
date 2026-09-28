@@ -7,8 +7,8 @@ own code (C++ or Blueprint), and play dialogue back through a small event-based 
 Requires **Unreal Engine 5.8** and a **C++ project**: the plugin ships as source, and the
 bindings it generates for your content are C++ classes you can extend in C++ or Blueprint.
 
-> **Status: early development.** The API is not yet stable and there is no tagged release.
-> Watch [`CHANGELOG.md`](Tarinoi/CHANGELOG.md).
+> **Status: early development.** Version 0.2.0. The API is not yet stable and will change
+> before 1.0. Watch [`CHANGELOG.md`](Tarinoi/CHANGELOG.md).
 
 ## Installation
 
@@ -42,7 +42,7 @@ to install.
 <details>
 <summary>Pinning to a specific version</summary>
 
-A clone tracks the default branch. Check out a tag or commit to pin it; worth doing while the
+A clone tracks the default branch. Check out a tag (`git checkout v0.2.0`) or commit to pin it; worth doing while the
 plugin is pre-1.0 and the API is still moving.
 
 </details>

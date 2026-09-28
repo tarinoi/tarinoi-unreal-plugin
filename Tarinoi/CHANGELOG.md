@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-28
+
+First public release, numbered to match the Godot and Unity plugins.
+
 ### Added
 - Sync from the Tarinoi documents API into a local SQLite database (the engine's SQLiteCore),
   incrementally, with the two-layer committed/uncommitted merge and a data-format version gate.
